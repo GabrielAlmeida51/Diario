@@ -1,50 +1,60 @@
-# Welcome to your Expo app 👋
+## Aplicativo Diário Pessoal (Expo + Supabase)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+### Tecnologias utilizadas
 
-## Get started
+- React Native (Expo)
+- Expo Router (navegação por arquivos)
+- Supabase (Auth, Database, Storage)
+- expo-image-picker (galeria/câmera)
+- expo-av (áudio/vídeo) — com aviso de depreciação; pode migrar para expo-audio/expo-video
+- TypeScript
 
-1. Install dependencies
+### Passo a passo
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1) Instalar dependências
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2) Configurar Supabase (URL e KEY)
 
-## Learn more
+- Abra `app.json` e preencha:
+  - `EXPO_PUBLIC_SUPABASE_URL`: cole a URL do seu projeto
+  - `EXPO_PUBLIC_SUPABASE_ANON_KEY`: cole a Public anon key
 
-To learn more about developing your project with Expo, look at the following resources:
+3) Criar recursos no Supabase
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Abra o SQL Editor do Supabase e cole o conteúdo do arquivo `supabase.sql`. Execute para criar tabela, políticas (RLS) e gatilho.
+- No Storage, crie um bucket chamado `journal-media`. Pode marcar como público para simplificar.
 
-## Join the community
+4) Rodar o app
 
-Join our community of developers creating universal apps.
+```bash
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Funcionalidades implementadas
+
+- Autenticação de usuário (login, cadastro, logout) com Supabase Auth
+- Criação de entradas com título, conteúdo e upload de mídias (imagem/vídeo/áudio)
+- Listagem das entradas do diário por usuário logado
+- Visualização dos detalhes com renderização de imagem/vídeo/áudio
+- Exclusão de entradas (e remoção dos arquivos do Storage)
+- SQL pronto para criar tabela, políticas RLS e função RPC para inserção
+
+5) Telas
+
+- `app/index.tsx`: redireciona conforme sessão (login ou lista de entradas)
+- `app/auth/index.tsx`: autenticação (Entrar/Criar conta)
+- `app/entries/index.tsx`: lista entradas e botão Sair/Nova
+- `app/entries/nova.tsx`: cria nova entrada com upload de mídia
+- `app/entries/[id].tsx`: detalhe com exclusão
+
+6) Código importante
+
+- `lib/supabase.ts`: cliente com placeholders (URL/KEY)
+- `lib/auth.ts`: helpers de sessão/login/logout
+- `lib/storage.ts`: upload usando ArrayBuffer para o bucket `journal-media`
+
+Tudo está em Português do Brasil.
